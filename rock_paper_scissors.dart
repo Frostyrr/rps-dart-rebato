@@ -4,44 +4,59 @@ const List<String> rps = ['rock', 'paper', 'scissors'];
 
 List<String> getPlayerName() {
   stdout.write("Enter Player 1 name: ");
-  String playerOne = stdin.readLineSync() ?? "Player 1";
+  String? playerOne = stdin.readLineSync();
+  if (playerOne == null || playerOne.trim().isEmpty) {
+    playerOne = "Player 1";
+    print("(No name entered. Using 'Player 1'.)");
+  }
 
   stdout.write("Enter Player 2 name: ");
-  String playerTwo = stdin.readLineSync() ?? "Player 2";
+  String? playerTwo = stdin.readLineSync();
+  if (playerTwo == null || playerTwo.trim().isEmpty) {
+    playerTwo = "Player 2";
+    print("(No name entered. Using 'Player 2'.)");
+  }
 
   return [playerOne, playerTwo];
 }
 
-List<String?> getMove(String playerOne, String playerTwo) {
-  stdout.write("$playerOne, enter your move (rock/paper/scissors): ");
-  String? playerOneMove = stdin.readLineSync()?.toLowerCase();
+List<String?> getMove(String? playerOne, String? playerTwo) {
+  String? playerOneMove;
+  String? playerTwoMove;
 
-  stdout.write("$playerTwo, enter your move (rock/paper/scissors): ");
-  String? playerTwoMove = stdin.readLineSync()?.toLowerCase();
+  while (validateMove(playerOneMove) == null) {
+    stdout.write("$playerOne, enter your move (rock/paper/scissors): ");
+    playerOneMove = stdin.readLineSync()?.toLowerCase();
+  }
 
-  validateMove(playerOne, playerTwo);
+  while (validateMove(playerTwoMove) == null) {
+    stdout.write("$playerTwo, enter your move (rock/paper/scissors): ");
+    playerTwoMove = stdin.readLineSync()?.toLowerCase();
+  }
 
   return [playerOneMove, playerTwoMove];
 }
 
-dynamic validateMove(playerOneMove, playerTwoMove) {
-  if (playerOneMove == playerTwoMove) {
-    print("Draw");
-    return null;
-  }
-
-  if (!rps.contains(playerOneMove) || !rps.contains(playerTwoMove)) {
+String? validateMove(playerMove) {
+  if (!rps.contains(playerMove)) {
     print("Invalid move.");
     return null;
   }
+
+  return playerMove;
 }
 
-dynamic decideWinner(playerOne, playerTwo, playerOneMove, playerTwoMove) {
+String? decideWinner(playerOne, playerTwo, playerOneMove, playerTwoMove) {
   String rock = rps[0];
   String paper = rps[1];
   String scissors = rps[2];
 
-  dynamic result;
+  String? result;
+
+  if (playerOneMove == playerTwoMove) {
+    result = "Draw";
+    return null;
+  }
 
   if (playerOneMove == rock && playerTwoMove == paper) {
     result = "$playerTwo wins the round!";
