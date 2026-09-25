@@ -1,7 +1,9 @@
 import 'dart:io';
 
+// list of available moves for rock, paper, scissors
 const List<String> rps = ['rock', 'paper', 'scissors'];
 
+/// to get the players' name through user input
 List<String> getPlayerName() {
   stdout.write("Enter Player 1 name: ");
   String? playerOne = stdin.readLineSync();
@@ -20,6 +22,7 @@ List<String> getPlayerName() {
   return [playerOne, playerTwo];
 }
 
+/// to clear the screen after each players' inputs
 void clearScreen() {
   for (int i = 0; i < 30; i++) {
     print("");
@@ -27,6 +30,7 @@ void clearScreen() {
   print("(screen cleared)");
 }
 
+/// to get moves from each player
 List<String?> getMove(String? playerOne, String? playerTwo) {
   String? playerOneMove;
   String? playerTwoMove;
@@ -34,17 +38,31 @@ List<String?> getMove(String? playerOne, String? playerTwo) {
   do {
     stdout.write("$playerOne, enter your move (rock/paper/scissors): ");
     playerOneMove = stdin.readLineSync()?.toLowerCase();
-  } while (validateMove(playerOneMove) == null);
+
+    if (validateMove(playerOneMove) == null) {
+      continue;
+    }
+
+    clearScreen();
+  } while (!rps.contains(playerOneMove));
+
+  clearScreen();
 
   do {
     stdout.write("$playerTwo, enter your move (rock/paper/scissors): ");
     playerTwoMove = stdin.readLineSync()?.toLowerCase();
-  } while (validateMove(playerTwoMove) == null);
+
+    if (validateMove(playerTwoMove) == null) {
+      continue;
+    }
+    clearScreen();
+  } while (!rps.contains(playerTwoMove));
 
   return [playerOneMove, playerTwoMove];
 }
 
-String? validateMove(playerMove) {
+/// to validate getMove user inputs from each players
+String? validateMove(String? playerMove) {
   if (!rps.contains(playerMove)) {
     print("Invalid move.");
     return null;
@@ -53,7 +71,13 @@ String? validateMove(playerMove) {
   return playerMove;
 }
 
-String? decideWinner(playerOne, playerTwo, playerOneMove, playerTwoMove) {
+/// determines who wins the round
+String? decideWinner(
+  String playerOne,
+  String playerTwo,
+  String? playerOneMove,
+  String? playerTwoMove,
+) {
   String rock = rps[0];
   String paper = rps[1];
   String scissors = rps[2];
@@ -81,6 +105,7 @@ String? decideWinner(playerOne, playerTwo, playerOneMove, playerTwoMove) {
   return result;
 }
 
+/// runs the entire program (rock, paper, scissors game)
 void main() {
   int playerOneScore = 0;
   int playerTwoScore = 0;
@@ -91,7 +116,7 @@ void main() {
   int rounds = 1;
   do {
     print("===== ROCK, PAPER, SCISSORS =====");
-    print("--- Rounds $rounds ---");
+    print("--- Round $rounds ---");
     List<String?> playerMoves = getMove(playerOne, playerTwo);
     String? playerOneMove = playerMoves[0];
     String? playerTwoMove = playerMoves[1];
@@ -104,6 +129,9 @@ void main() {
     );
 
     if (result != null) {
+      print(
+        "$playerOne chose $playerOneMove. $playerTwo chose $playerTwoMove.",
+      );
       print("Result: $result");
 
       if (result.contains(playerOne)) {
