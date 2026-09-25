@@ -46,8 +46,6 @@ List<String?> getMove(String? playerOne, String? playerTwo) {
     clearScreen();
   } while (!rps.contains(playerOneMove));
 
-  clearScreen();
-
   do {
     stdout.write("$playerTwo, enter your move (rock/paper/scissors): ");
     playerTwoMove = stdin.readLineSync()?.toLowerCase();
@@ -110,39 +108,37 @@ void main() {
   int playerOneScore = 0;
   int playerTwoScore = 0;
   List<String> playerNames = getPlayerName();
-  String playerOne = playerNames[0];
-  String playerTwo = playerNames[1];
   String? choice;
   int rounds = 1;
   do {
     print("===== ROCK, PAPER, SCISSORS =====");
     print("--- Round $rounds ---");
-    List<String?> playerMoves = getMove(playerOne, playerTwo);
-    String? playerOneMove = playerMoves[0];
-    String? playerTwoMove = playerMoves[1];
+    List<String?> playerMoves = getMove(playerNames[0], playerNames[1]);
 
     String? result = decideWinner(
-      playerOne,
-      playerTwo,
-      playerOneMove,
-      playerTwoMove,
+      playerNames[0],
+      playerNames[1],
+      playerMoves[0],
+      playerMoves[1],
     );
 
     if (result != null) {
       print(
-        "$playerOne chose $playerOneMove. $playerTwo chose $playerTwoMove.",
+        "${playerNames[0]} chose ${playerMoves[0]}. ${playerNames[1]} chose ${playerMoves[1]}.",
       );
       print("Result: $result");
 
-      if (result.contains(playerOne)) {
+      if (result.contains(playerNames[0])) {
         playerOneScore++;
-      } else if (result.contains(playerTwo)) {
+      } else if (result.contains(playerNames[1])) {
         playerTwoScore++;
       }
     } else {
       print("Result: Draw");
     }
-    print("Score -> $playerOne: $playerOneScore | $playerTwo: $playerTwoScore");
+    print(
+      "Score -> ${playerNames[0]}: $playerOneScore | ${playerNames[1]}: $playerTwoScore",
+    );
 
     stdout.write("Play again? (y/n): ");
     choice = stdin.readLineSync()?.trim().toLowerCase();
@@ -155,14 +151,16 @@ void main() {
   String overAllWinner;
 
   if (playerOneScore > playerTwoScore) {
-    overAllWinner = "$playerOne";
+    overAllWinner = "${playerNames[0]}";
   } else if (playerOneScore < playerTwoScore) {
-    overAllWinner = "$playerTwo";
+    overAllWinner = "${playerNames[1]}";
   } else {
     overAllWinner = "Draw";
   }
 
   print("===== FINAL SCORE =====");
-  print("$playerOne: $playerOneScore | $playerTwo: $playerTwoScore");
+  print(
+    "${playerNames[0]}: $playerOneScore | ${playerNames[1]}: $playerTwoScore",
+  );
   print("Overall winner: $overAllWinner");
 }
